@@ -24,15 +24,16 @@ function DeferredScreen() {
     <SafeAreaView style={styles.container}>
       <Button onPress={() => setCount(x => x + 1)} title="Increase" />
       <Text>{count}</Text>
-      <SlowList count={defferedCount} />
+      <SlowItem count={defferedCount} />
     </SafeAreaView>
   );
 }
 
 const SlowItem = ({ count: text }: SlowItemProps) => {
   let startTime = performance.now();
-  while (performance.now() - startTime < 10) {
-    // Do nothing for 1 ms per item to emulate extremely slow code
+  // Simulate a slow render process by blocking for 200ms.
+  while (performance.now() - startTime < 200) {
+    // Note: Rendering times above 300ms can cause noticeable button interaction lag.
   }
 
   return (
@@ -41,21 +42,6 @@ const SlowItem = ({ count: text }: SlowItemProps) => {
     </View>
   );
 };
-
-const SlowList = memo(({ count }: SlowListProps) => {
-  console.log("[ARTIFICIALLY SLOW] Rendering 250 <SlowItem />");
-
-  const items = [];
-  for (let i = 0; i < 250; i++) {
-    items.push(<SlowItem key={i} count={count} />);
-  }
-
-  return (
-    <ScrollView style={styles.list}>
-      <View style={styles.listContainer}>{items}</View>
-    </ScrollView>
-  );
-});
 
 export default DeferredScreen;
 
